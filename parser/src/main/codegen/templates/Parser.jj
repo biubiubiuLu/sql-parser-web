@@ -25,7 +25,6 @@ options {
 }
 
 
-
 PARSER_BEGIN(${parser.class})
 
 package ${parser.package};
@@ -124,8 +123,6 @@ import org.apache.calcite.util.Pair;
 import org.apache.calcite.util.SourceStringReader;
 import org.apache.calcite.util.Util;
 import org.apache.calcite.util.trace.CalciteTrace;
-
-import org.apache.flink.sql.parser.hive.util.HiveSqlParserStringUtil;
 
 import org.slf4j.Logger;
 
@@ -4824,12 +4821,6 @@ void IdentifierSegment(List<String> names, List<SqlParserPos> positions) :
             pos = getPos();
         }
     |
-        <MY_IDENTIFIER> {
-            id = HiveSqlParserStringUtil.startEndReplace(getToken(0).image, "`", "`", "",
-                                 quotedCasing);
-            pos = getPos();
-        }
-    |
         <HYPHENATED_IDENTIFIER> {
             id = unquotedIdentifier();
             pos = getPos();
@@ -7082,6 +7073,7 @@ SqlPostfixOperator PostfixRowOperator() :
     )
 }
 
+
 /* KEYWORDS:  anything in this list is a reserved word unless it appears
    in the NonReservedKeyWord() production. */
 
@@ -8129,10 +8121,6 @@ MORE :
 <DEFAULT, DQID, BTID, BQID> TOKEN :
 {
     < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
-}
-<DEFAULT, DQID, BTID, BQID> TOKEN :
-{
-    < MY_IDENTIFIER: "`" <IDENTIFIER> "`">
 }
 
 <DEFAULT, DQID, BTID, BQID, BQHID> TOKEN :
