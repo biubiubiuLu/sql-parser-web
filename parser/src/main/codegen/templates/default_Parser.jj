@@ -3880,7 +3880,6 @@ SqlNode AtomicRowExpression() :
     { return e; }
 }
 
-
 SqlNode CaseExpression() :
 {
     final Span whenSpan = Span.of();
@@ -4862,11 +4861,6 @@ void IdentifierSegment(List<String> names, List<SqlParserPos> positions) :
             SqlLiteral lit = SqlLiteral.createCharString(image, "UTF16", pos);
             lit = lit.unescapeUnicode(unicodeEscapeChar);
             id = lit.toValue();
-        }
-    |
-        <MACRO_VARIABLE>{
-            id = "123";
-            pos = getPos().withQuoting(true);
         }
     |
         id = NonReservedKeyWord() {
@@ -8139,8 +8133,6 @@ MORE :
     >
 |
     < UNICODE_QUOTED_IDENTIFIER: "U" "&" <QUOTED_IDENTIFIER> >
-|
-    < MACRO_VARIABLE : <DOLLAR>"{"(<LETTER>|<DIGIT>|"_")+"}" >
 |
     < #LETTER:
     [
