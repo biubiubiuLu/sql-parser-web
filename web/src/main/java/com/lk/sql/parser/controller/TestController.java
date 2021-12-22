@@ -21,9 +21,9 @@ public class TestController {
     private static Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @PostMapping("sql")
-    public String queryTrack(@RequestBody Map<String,String> paramMap) {
+    public String queryTrack(@RequestBody Map<String, String> paramMap) {
         String sql = paramMap.get("sql");
-        System.out.println(sql);
+        String[] sqls = sql.split(";");
         try {
             SqlParser.Config config = SqlParser.configBuilder().setParserFactory(MySqlParserImpl.FACTORY).setLex(Lex.MYSQL).build();
             SqlParser sqlParser = SqlParser.create(sql, config);
