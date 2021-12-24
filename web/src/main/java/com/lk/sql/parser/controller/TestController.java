@@ -25,10 +25,18 @@ public class TestController {
         String sql = paramMap.get("sql");
         String[] sqls = sql.split(";");
         try {
-            SqlParser.Config config = SqlParser.configBuilder().setParserFactory(MySqlParserImpl.FACTORY).setLex(Lex.MYSQL).build();
-            SqlParser sqlParser = SqlParser.create(sql, config);
-            SqlNode sqlNode = sqlParser.parseStmt();
-            System.out.println(sqlNode);
+            SqlParser sqlParser = null;
+            for (String sqlItem : sqls) {
+                if (sqlParser == null) {
+                    SqlParser.Config config = SqlParser.configBuilder().setParserFactory(MySqlParserImpl.FACTORY).setLex(Lex.MYSQL).build();
+                    sqlParser = SqlParser.create(sqlItem, config);
+                    SqlNode sqlNode = sqlParser.parseStmt();
+                    System.out.println(sqlNode);
+                } else {
+                    SqlNode sqlNode = sqlParser.parseQuery(sqlItem);
+                    System.out.println(sqlNode);
+                }
+            }
         } catch (Exception e) {
             logger.error("sql error ", e);
         }
