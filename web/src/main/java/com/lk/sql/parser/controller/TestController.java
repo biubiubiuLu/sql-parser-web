@@ -2,7 +2,10 @@ package com.lk.sql.parser.controller;
 
 import com.lk.sql.parser.impl.MySqlParserImpl;
 import org.apache.calcite.config.Lex;
+import org.apache.calcite.sql.SqlBasicCall;
+import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.SqlSelect;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,21 @@ public class TestController {
                     System.out.println(sqlNode);
                 } else {
                     SqlNode sqlNode = sqlParser.parseQuery(sqlItem);
+                    if(sqlNode.getKind() == SqlKind.SELECT){
+                        SqlSelect sqlSelect = (SqlSelect) sqlNode;
+                        SqlNode sqlWhere = sqlSelect.getWhere();
+                         sqlSelect.getSelectList();
+                        if(sqlWhere.getKind() == SqlKind.EQUALS){
+                            SqlBasicCall equalsBasicCall = (SqlBasicCall) sqlWhere;
+                            SqlNode[] operandNodes =  equalsBasicCall.getOperands();
+                            for(SqlNode operandNode : operandNodes){
+                                if(operandNode.getKind() == SqlKind.OTHER_FUNCTION){
+                                    SqlBasicCall functionCall = (SqlBasicCall) operandNode;
+                                    functionCall = functionCall;
+                                }
+                            }
+                        }
+                    }
                     System.out.println(sqlNode);
                 }
             }
