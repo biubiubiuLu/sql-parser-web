@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.lk</groupId>
         <artifactId>sql-parser</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>com.lk</groupId>
     <artifactId>web</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -34,11 +37,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.9.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
             <exclusions>
@@ -61,65 +59,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-jul</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>jul-to-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jul</artifactId>
-            <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-starter.version}</version>
         </dependency>
         <!--引入AOP依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -154,7 +98,6 @@
             <artifactId>commons-collections4</artifactId>
             <version>${commons-collections4.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -165,11 +108,6 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.calcite</groupId>
@@ -199,6 +137,7 @@
                 <includes>
                     <include>application.yml</include>
                     <include>application-${activatedProperties}.yml</include>
+                    <include>log4j2-*.xml</include>
                 </includes>
             </resource>
         </resources>
@@ -260,11 +199,6 @@
             <properties>
                 <!-- 环境标识，需要与配置文件的名称相对应 -->
                 <activatedProperties>dev</activatedProperties>
-                <tcbaseEnv>test</tcbaseEnv>
-                <dsfHost>qa.dsf2.17usoft.com</dsfHost>
-                <dsfEnv>qa</dsfEnv>
-                <kudu.test>compile</kudu.test>
-                <kudu.product>test</kudu.product>
             </properties>
             <activation>
                 <!-- 默认环境 -->
@@ -275,34 +209,20 @@
             <id>qa</id>
             <properties>
                 <activatedProperties>qa</activatedProperties>
-                <tcbaseEnv>qa</tcbaseEnv>
-                <dsfHost>qa.dsf2.17usoft.com</dsfHost>
-                <dsfEnv>qa</dsfEnv>
-                <kudu.test>compile</kudu.test>
-                <kudu.product>test</kudu.product>
             </properties>
         </profile>
         <profile>
             <id>stage</id>
             <properties>
                 <activatedProperties>stage</activatedProperties>
-                <tcbaseEnv>stage</tcbaseEnv>
-                <dsfHost>t.dsf2.17usoft.com</dsfHost>
-                <dsfEnv>stage</dsfEnv>
-                <kudu.test>test</kudu.test>
-                <kudu.product>compile</kudu.product>
             </properties>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
                 <activatedProperties>prod</activatedProperties>
-                <tcbaseEnv>product</tcbaseEnv>
-                <dsfHost>dsf2.17usoft.com</dsfHost>
-                <dsfEnv>product</dsfEnv>
-                <kudu.test>test</kudu.test>
-                <kudu.product>compile</kudu.product>
             </properties>
         </profile>
     </profiles>
+
 </project>
