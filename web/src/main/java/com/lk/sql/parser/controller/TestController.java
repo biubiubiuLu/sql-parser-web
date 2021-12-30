@@ -1,11 +1,13 @@
 package com.lk.sql.parser.controller;
 
 import com.lk.sql.parser.impl.MySqlParserImpl;
+import com.lk.sql.parser.operator.FunctionCatalogOperatorTable;
 import com.lk.sql.parser.operator.MyCatalogSqlOperatorTable;
 import com.lk.sql.parser.operator.MySqlOperatorTable;
 import com.lk.sql.parser.schema.CatalogCalciteSchema;
 import com.lk.sql.parser.schema.CatalogManagerSchema;
 import com.lk.sql.parser.validator.MySqlValidatorImpl;
+import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.config.CalciteConnectionConfig;
 import org.apache.calcite.config.Lex;
 import org.apache.calcite.config.NullCollation;
@@ -86,8 +88,8 @@ public class TestController {
 
         }
 
-        RelDataTypeFactory typeFactory = new JavaTypeFactoryImpl();
-        SqlOperatorTable operatorTable = SqlOperatorTables.chain(new MyCatalogSqlOperatorTable(), MySqlOperatorTable.instance());
+        JavaTypeFactory typeFactory = new JavaTypeFactoryImpl();
+        SqlOperatorTable operatorTable = SqlOperatorTables.chain(new MyCatalogSqlOperatorTable(),new FunctionCatalogOperatorTable(typeFactory), MySqlOperatorTable.instance());
         SqlValidator.Config config = SqlValidator.Config.DEFAULT
                 .withIdentifierExpansion(true)
                 .withDefaultNullCollation(NullCollation.LOW)
