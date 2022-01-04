@@ -36,12 +36,10 @@ public class MySqlOperatorTable extends ReflectiveSqlOperatorTable {
 
     public static final SqlFunction MY_UDF =
             new SqlFunction(
-                    "MY_CONCAT",
+                    "UPPER",
                     SqlKind.OTHER_FUNCTION,
-                    ReturnTypes.cascade(
-                            ReturnTypes.explicit(SqlTypeName.VARCHAR),
-                            SqlTypeTransforms.TO_NULLABLE),
+                    ReturnTypes.ARG0_NULLABLE,
                     null,
-                    OperandTypes.repeat(SqlOperandCountRanges.from(1), OperandTypes.STRING),
+                    OperandTypes.CHARACTER,
                     SqlFunctionCategory.STRING);
 }

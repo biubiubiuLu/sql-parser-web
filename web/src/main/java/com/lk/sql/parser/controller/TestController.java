@@ -18,6 +18,7 @@ import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.sql.*;
+import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.util.SqlOperatorTables;
 import org.apache.calcite.sql.validate.SqlValidator;
@@ -89,7 +90,7 @@ public class TestController {
         }
 
         JavaTypeFactory typeFactory = new JavaTypeFactoryImpl();
-        SqlOperatorTable operatorTable = SqlOperatorTables.chain(new MyCatalogSqlOperatorTable(),new FunctionCatalogOperatorTable(typeFactory), MySqlOperatorTable.instance());
+        SqlOperatorTable operatorTable = SqlOperatorTables.chain(new MyCatalogSqlOperatorTable(),new FunctionCatalogOperatorTable(typeFactory), MySqlOperatorTable.instance(), SqlStdOperatorTable.instance());
         SqlValidator.Config config = SqlValidator.Config.DEFAULT
                 .withIdentifierExpansion(true)
                 .withDefaultNullCollation(NullCollation.LOW)
