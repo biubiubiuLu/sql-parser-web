@@ -22,7 +22,4 @@ public class BaseFunction extends SqlFunction {
         super(sqlIdentifier, returnTypeInference, operandTypeInference, operandTypeChecker, paramTypes, funcType);
     }
 
-    public String test(String value) {
-        return value + "123";
-    }
 }

@@ -36,7 +36,7 @@ public class MySqlOperatorTable extends ReflectiveSqlOperatorTable {
 
     public static final SqlFunction MY_UDF =
             new SqlFunction(
-                    "UPPER",
+                    "testFunction1",
                     SqlKind.OTHER_FUNCTION,
                     ReturnTypes.ARG0_NULLABLE,
                     null,
