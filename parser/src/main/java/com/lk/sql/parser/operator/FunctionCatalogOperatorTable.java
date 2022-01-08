@@ -26,10 +26,10 @@ public class FunctionCatalogOperatorTable implements SqlOperatorTable {
 
     @Override
     public void lookupOperatorOverloads(SqlIdentifier opName, SqlFunctionCategory category, SqlSyntax syntax, List<SqlOperator> operatorList, SqlNameMatcher nameMatcher) {
-        if(category != null && category.isFunction()) {
-            SqlOperator sqlOperator = new BaseFunction(opName, ReturnTypes.ARG0_NULLABLE, null, OperandTypes.CHARACTER, new ArrayList<>(), SqlFunctionCategory.STRING);
-            operatorList.add(sqlOperator);
-        }
+//        if(category != null && category.isFunction()) {
+//            SqlOperator sqlOperator = new BaseFunction(opName, ReturnTypes.ARG0_NULLABLE, null, OperandTypes.CHARACTER, new ArrayList<>(), SqlFunctionCategory.STRING);
+//            operatorList.add(sqlOperator);
+//        }
     }
 
     @Override

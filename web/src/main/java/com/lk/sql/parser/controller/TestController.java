@@ -10,18 +10,19 @@ import com.lk.sql.parser.udf.BaseFunction;
 import com.lk.sql.parser.udf.TestFunction;
 import com.lk.sql.parser.validator.MySqlValidatorImpl;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
+import org.apache.calcite.adapter.java.ReflectiveSchema;
 import org.apache.calcite.config.CalciteConnectionConfig;
 import org.apache.calcite.config.Lex;
 import org.apache.calcite.config.NullCollation;
-import org.apache.calcite.jdbc.CalciteRootSchema;
-import org.apache.calcite.jdbc.CalciteSchema;
-import org.apache.calcite.jdbc.CalciteSchemaBuilder;
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import org.apache.calcite.jdbc.*;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
+import org.apache.calcite.schema.Schema;
+import org.apache.calcite.schema.SchemaPlus;
 import org.apache.calcite.sql.*;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParser;
+import org.apache.calcite.sql.util.ReflectiveSqlOperatorTable;
 import org.apache.calcite.sql.util.SqlOperatorTables;
 import org.apache.calcite.sql.validate.SqlValidator;
 import org.apache.calcite.sql.validate.SqlValidatorImpl;
@@ -29,9 +30,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author lukai
@@ -42,6 +48,32 @@ import java.util.Map;
 public class TestController {
 
     private static Logger logger = LoggerFactory.getLogger(TestController.class);
+
+    public static class HrSchema {
+        public final Table1[] emps =  new Table1[]{Table1.of("lk","123"),Table1.of("zm","456")};;
+        public final String[] depts = new String[5];
+    }
+
+    public static class  Table1{
+
+        public String nameTest;
+
+        public String valueTest;
+
+        public Table1(){
+
+        }
+
+        public Table1(String name,String value){
+            this.nameTest = name;
+            this.valueTest = value;
+        }
+
+        public static Table1 of(String name,String value){
+            return new Table1(name,value);
+        }
+
+    }
 
     @PostMapping("sql")
     public String queryTrack(@RequestBody Map<String, String> paramMap) {
@@ -54,7 +86,20 @@ public class TestController {
             for(SqlNode sqlNode : sqlNodes){
                 doValidate(sqlNode);
             }
-
+            Class.forName("org.apache.calcite.jdbc.Driver");
+            Properties info = new Properties();
+            info.setProperty("lex","JAVA");
+            Connection connection = DriverManager.getConnection("jdbc:calcite:",info);
+            CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+            SchemaPlus rootSchema = calciteConnection.getRootSchema();
+            Schema javaSchema = new ReflectiveSchema(new HrSchema());
+            rootSchema.add("hr",javaSchema);
+            Statement statement = calciteConnection.createStatement();
+            ResultSet resultSet =  statement.executeQuery("select * from hr.emps");
+            while (resultSet.next()){
+                System.out.println(resultSet.getString(1));
+                System.out.println(resultSet.getString(2));
+            }
 
         } catch (Exception e) {
             logger.error("sql error ", e);
