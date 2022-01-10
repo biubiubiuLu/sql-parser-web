@@ -1,5 +1,6 @@
 package com.lk.sql.parser.controller;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.lk.sql.parser.impl.MySqlParserImpl;
 import com.lk.sql.parser.operator.FunctionCatalogOperatorTable;
 import com.lk.sql.parser.operator.MyCatalogSqlOperatorTable;
@@ -11,6 +12,7 @@ import com.lk.sql.parser.udf.TestFunction;
 import com.lk.sql.parser.validator.MySqlValidatorImpl;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.adapter.java.ReflectiveSchema;
+import org.apache.calcite.adapter.jdbc.JdbcSchema;
 import org.apache.calcite.config.CalciteConnectionConfig;
 import org.apache.calcite.config.Lex;
 import org.apache.calcite.config.NullCollation;
@@ -50,13 +52,13 @@ public class TestController {
     private static Logger logger = LoggerFactory.getLogger(TestController.class);
 
     public static class HrSchema {
-        public final Table1[] emps =  new Table1[]{Table1.of("lk","123"),Table1.of("zm","456")};;
+        public final Table1[] emps =  new Table1[]{Table1.of("dev","123"),Table1.of("prod","456")};;
         public final String[] depts = new String[5];
     }
 
     public static class  Table1{
 
-        public String nameTest;
+        public String env;
 
         public String valueTest;
 
@@ -64,13 +66,13 @@ public class TestController {
 
         }
 
-        public Table1(String name,String value){
-            this.nameTest = name;
+        public Table1(String env,String value){
+            this.env = env;
             this.valueTest = value;
         }
 
-        public static Table1 of(String name,String value){
-            return new Table1(name,value);
+        public static Table1 of(String env,String value){
+            return new Table1(env,value);
         }
 
     }
@@ -94,10 +96,19 @@ public class TestController {
             SchemaPlus rootSchema = calciteConnection.getRootSchema();
             Schema javaSchema = new ReflectiveSchema(new HrSchema());
             rootSchema.add("hr",javaSchema);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            DruidDataSource dataSource = new DruidDataSource();
+            dataSource.setUrl("jdbc:mysql://10.100.157.115:3500/TCFlyIntOrderCore?useUnicode=true&amp");
+            dataSource.setUsername("TCFlyIntOrderCore");
+            dataSource.setPassword("2TXWmiIRY3vljGx6NwghS7JMz");
+            dataSource.init();
+            Schema jdbcSchema = JdbcSchema.create(rootSchema, "TCFlyIntOrderCore", dataSource, null, "TCFlyIntOrderCore");
+            rootSchema.add("TCFlyIntOrderCore",jdbcSchema);
             Statement statement = calciteConnection.createStatement();
-            ResultSet resultSet =  statement.executeQuery("select * from hr.emps");
+            ResultSet resultSet =  statement.executeQuery("select b.* from hr.emps as a left  join TCFlyIntOrderCore.train_order_info as  b on a.env = b.env ");
+            //ResultSet resultSet = statement.executeQuery("select * from TCFlyIntOrderCore.train_order_info limit 100");
             while (resultSet.next()){
-                System.out.println(resultSet.getString(1));
+                System.out.println(resultSet.getString("env"));
                 System.out.println(resultSet.getString(2));
             }
 
